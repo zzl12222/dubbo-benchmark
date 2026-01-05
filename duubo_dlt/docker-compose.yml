@@ -1,0 +1,421 @@
+version: '3.8'
+
+services:
+  nacos:
+    image: nacos/nacos-server:v2.1.0
+    container_name: nacos-server
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=
+      - NACOS_AUTH_ENABLE=false
+    ports:
+      - "8848:8848"
+    volumes:
+      - nacos_data:/home/nacos/data
+      - nacos_logs:/home/nacos/logs
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo Agent 服务 - 自定义配置版
+  dubbo-agent:
+    build:
+      context: .
+      dockerfile: ./dubbo-agent/Dockerfile
+    container_name: dubbo-agent
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_APPLICATION_NAME=dubbo-agent
+      - NACOS_HOST=nacos-server
+      - AGENT_LOADBALANCE=random
+      - AGENT_DURATION_SECONDS=100
+      - AGENT_TEST_MODE=FIXED_COUNT
+      - AGENT_REQUEST_COUNT=100
+      - AGENT_SERIALIZATION=hessian2
+      - TEST_DEFAULT_TIMEOUT_SECONDS=300
+      - TEST_MAX_CONCURRENT_TESTS=10
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs/agent:/app/logs
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo Produce 服务 1
+  dubbo-producer-1:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-1
+    environment:
+      - SERVICE_PORT=8082
+      - SPRING_APPLICATION_NAME=dubbo-producer-1
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20880
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8082:8082"
+      - "20880:20880"
+    volumes:
+      - ./logs/producer-1:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 2
+  dubbo-producer-2:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-2
+    environment:
+      - SERVICE_PORT=8083
+      - SPRING_APPLICATION_NAME=dubbo-producer-2
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20881
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8083:8083"
+      - "20881:20881"
+    volumes:
+      - ./logs/producer-2:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 3
+  dubbo-producer-3:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-3
+    environment:
+      - SERVICE_PORT=8084
+      - SPRING_APPLICATION_NAME=dubbo-producer-3
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20882
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8084:8084"
+      - "20882:20882"
+    volumes:
+      - ./logs/producer-3:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 4
+  dubbo-producer-4:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-4
+    environment:
+      - SERVICE_PORT=8085
+      - SPRING_APPLICATION_NAME=dubbo-producer-4
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20883
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8085:8085"
+      - "20883:20883"
+    volumes:
+      - ./logs/producer-4:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 5
+  dubbo-producer-5:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-5
+    environment:
+      - SERVICE_PORT=8086
+      - SPRING_APPLICATION_NAME=dubbo-producer-5
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20884
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8086:8086"
+      - "20884:20884"
+    volumes:
+      - ./logs/producer-5:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 6
+  dubbo-producer-6:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-6
+    environment:
+      - SERVICE_PORT=8087
+      - SPRING_APPLICATION_NAME=dubbo-producer-6
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20885
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8087:8087"
+      - "20885:20885"
+    volumes:
+      - ./logs/producer-6:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 7
+  dubbo-producer-7:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-7
+    environment:
+      - SERVICE_PORT=8088
+      - SPRING_APPLICATION_NAME=dubbo-producer-7
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20886
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8088:8088"
+      - "20886:20886"
+    volumes:
+      - ./logs/producer-7:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 8
+  dubbo-producer-8:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-8
+    environment:
+      - SERVICE_PORT=8089
+      - SPRING_APPLICATION_NAME=dubbo-producer-8
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20887
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8089:8089"
+      - "20887:20887"
+    volumes:
+      - ./logs/producer-8:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 9
+  dubbo-producer-9:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-9
+    environment:
+      - SERVICE_PORT=8090
+      - SPRING_APPLICATION_NAME=dubbo-producer-9
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20888
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8090:8090"
+      - "20888:20888"
+    volumes:
+      - ./logs/producer-9:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo producer 服务 10
+  dubbo-producer-10:
+    build:
+      context: .
+      dockerfile: ./dubbo-producer/Dockerfile
+    container_name: dubbo-producer-10
+    environment:
+      - SERVICE_PORT=8091
+      - SPRING_APPLICATION_NAME=dubbo-producer-10
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - DUBBO_PROTOCOL_PORT=20889
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8091:8091"
+      - "20889:20889"
+    volumes:
+      - ./logs/producer-10:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo Consumer 服务 1
+  dubbo-consumer-1:
+    build:
+      context: .
+      dockerfile: ./dubbo-consumer/Dockerfile
+    container_name: dubbo-consumer-1
+    environment:
+      - CONSUMER_PORT=8081
+      - SPRING_APPLICATION_NAME=dubbo-consumer-1
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8080
+      - NACOS_HOST=nacos-server
+      - DUBBO_CONSUMER_LOADBALANCE=roundrobin
+      - DUBBO_QOS_ENABLE=false
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./logs/consumer-1:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_started
+      dubbo-producer-1:
+        condition: service_started
+      dubbo-producer-2:
+        condition: service_started
+      dubbo-producer-3:
+        condition: service_started
+      dubbo-producer-4:
+        condition: service_started
+      dubbo-producer-5:
+        condition: service_started
+      dubbo-producer-6:
+        condition: service_started
+      dubbo-producer-7:
+        condition: service_started
+      dubbo-producer-8:
+        condition: service_started
+      dubbo-producer-9:
+        condition: service_started
+      dubbo-producer-10:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  # Dubbo Admin 监控服务
+  dubbo-admin:
+    image: apache/dubbo-admin:0.5.0
+    container_name: dubbo-admin
+    environment:
+      - admin.registry.address=nacos://nacos-server:8848
+      - admin.config-center=nacos://nacos-server:8848
+      - admin.metadata-report.address=nacos://nacos-server:8848
+    ports:
+      - "8083:8080"
+    depends_on:
+      nacos:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+networks:
+  dubbo-network:
+    driver: bridge
+
+volumes:
+  nacos_data:
+  nacos_logs:
+  dubbo-cache:
