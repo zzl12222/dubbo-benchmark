@@ -34,6 +34,11 @@ AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
 read -p "Enter Agent serialization method / 输入Agent序列化方式: " AGENT_SERIALIZE
 AGENT_SERIALIZE=${AGENT_SERIALIZE:-hessian2}
 
+# 定义端口起始值
+PROVIDER_SERVICE_START_PORT=8080
+PROVIDER_DUBBO_START_PORT=20880
+CONSUMER_START_PORT=8180  # 使用不同的端口段，避免冲突
+
 COMPOSE_FILE="docker-compose.yml"
 echo ""
 echo "Generating docker-compose file / 生成docker-compose文件..."
@@ -101,11 +106,11 @@ services:
 EOF
 
 # Generate Providers
-PROVIDER_SERVICE_PORT=8080
-PROVIDER_DUBBO_PORT=20880
-
 for (( i=1; i<=PROVIDER_NUM; i++ ))
 do
+  PROVIDER_SERVICE_PORT=$((PROVIDER_SERVICE_START_PORT + i - 1))
+  PROVIDER_DUBBO_PORT=$((PROVIDER_DUBBO_START_PORT + i - 1))
+  
   if [ $i -eq 1 ]; then
     CONTAINER_NAME="dubbo-provider"
     LOG_DIR="provider"
@@ -149,16 +154,13 @@ do
       - dubbo-network
     restart: unless-stopped
 EOF
-
-  PROVIDER_SERVICE_PORT=$((PROVIDER_SERVICE_PORT + 1))
-  PROVIDER_DUBBO_PORT=$((PROVIDER_DUBBO_PORT + 1))
 done
 
 # Generate Consumers
-CONSUMER_PORT=8081
-
 for (( i=1; i<=CONSUMER_NUM; i++ ))
 do
+  CONSUMER_PORT=$((CONSUMER_START_PORT + i - 1))
+  
   if [ $i -eq 1 ]; then
     CONTAINER_NAME="dubbo-consumer"
     LOG_DIR="consumer"
@@ -217,8 +219,6 @@ EOF
       - dubbo-network
     restart: unless-stopped
 EOF
-
-  CONSUMER_PORT=$((CONSUMER_PORT + 1))
 done
 
 # Add Dubbo Admin
@@ -253,6 +253,34 @@ EOF
 echo ""
 echo "✅ Generation completed! / 生成完成！"
 echo "File location: $(pwd)/$COMPOSE_FILE / 文件位置: $(pwd)/$COMPOSE_FILE"
+echo ""
+echo "Service Port Mapping / 服务端口映射:"
+echo "--------------------------------------"
+echo "Nacos: localhost:8848"
+echo "Dubbo Admin: localhost:8083"
+echo "Dubbo Agent: localhost:8082"
+echo ""
+for (( i=1; i<=PROVIDER_NUM; i++ ))
+do
+  PROVIDER_SERVICE_PORT=$((PROVIDER_SERVICE_START_PORT + i - 1))
+  PROVIDER_DUBBO_PORT=$((PROVIDER_DUBBO_START_PORT + i - 1))
+  if [ $i -eq 1 ]; then
+    echo "Dubbo Provider 1: localhost:${PROVIDER_SERVICE_PORT} (dubbo://localhost:${PROVIDER_DUBBO_PORT})"
+  else
+    echo "Dubbo Provider ${i}: localhost:${PROVIDER_SERVICE_PORT} (dubbo://localhost:${PROVIDER_DUBBO_PORT})"
+  fi
+done
+
+for (( i=1; i<=CONSUMER_NUM; i++ ))
+do
+  CONSUMER_PORT=$((CONSUMER_START_PORT + i - 1))
+  if [ $i -eq 1 ]; then
+    echo "Dubbo Consumer 1: localhost:${CONSUMER_PORT}"
+  else
+    echo "Dubbo Consumer ${i}: localhost:${CONSUMER_PORT}"
+  fi
+done
+echo "--------------------------------------"
 echo ""
 echo "Start command: / 启动命令:"
 echo "docker-compose -f $COMPOSE_FILE up -d --build"
