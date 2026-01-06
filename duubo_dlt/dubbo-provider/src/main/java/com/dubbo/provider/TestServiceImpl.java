@@ -1,4 +1,4 @@
-package com.dubbo.provide;
+package com.dubbo.provider;
 
 import com.dubbo.common.aop.DubboStatManager;
 import com.dubbo.common.api.TestService;
