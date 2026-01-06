@@ -1,4 +1,4 @@
-package com.dubbo.produce;
+package com.dubbo.provide	;
 
 import com.dubbo.common.cpu.SystemMonitorUtil;
 import com.dubbo.common.produce.NettyProduce;
@@ -13,7 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(scanBasePackages = {"com.dubbo.provide","com.dubbo.common"})
 @EnableDubbo
-public class ProduceApplication {
+public class ProvideApplication {
 
     private static final Logger log = LoggerFactory.getLogger(com.dubbo.produce.ProduceApplication.class);
 
