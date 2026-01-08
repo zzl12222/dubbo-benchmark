@@ -4,10 +4,10 @@ import com.dubbo.common.aop.DubboInvokeStat;
 import com.dubbo.common.constant.DubboInvokeEnum;
 
 public interface TestService {
-    @DubboInvokeStat(value = "agentname",  argKey = "AGENT_NAME_HELLO" ,argValue= DubboInvokeEnum.class)
+    @DubboInvokeStat(namespace = "agentname",  argKey = "AGENT_NAME_HELLO" ,argValue= DubboInvokeEnum.class)
     String sayHello(String name);
-    @DubboInvokeStat(value = "agentname",  argKey = "AGENT_NAME_HELLO",argValue=DubboInvokeEnum.class)
+    @DubboInvokeStat(namespace = "agentname",  argKey = "AGENT_NAME_HELLO",argValue=DubboInvokeEnum.class)
     String sayHello2(String name);
-    @DubboInvokeStat(value = "agentname", argKey = "AGENT_NAME_HELLO", argValue = DubboInvokeEnum.class)
+    @DubboInvokeStat(namespace = "agentname", argKey = "AGENT_NAME_HELLO", argValue = DubboInvokeEnum.class)
     String sayHeelow(String name);
 }
