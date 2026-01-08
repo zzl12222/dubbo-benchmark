@@ -15,10 +15,28 @@ PRODUCE_NUM=${PRODUCE_NUM:-10}
 read -p "Enter number of Dubbo Consumers (default: 1) / 输入Consumer数量(默认: 1): " CONSUMER_NUM
 CONSUMER_NUM=${CONSUMER_NUM:-1}
 
+# 定义端口起始值 - 固定端口放在最前面
+NACOS_PORT=8848
+AGENT_PORT=8082
+ADMIN_PORT=8083
+
+# 其他服务端口从固定端口之后开始
+PRODUCE_SERVICE_START_PORT=$((ADMIN_PORT + 100))  # 从8183开始
+PRODUCE_DUBBO_START_PORT=20880
+CONSUMER_SERVICE_START_PORT=$((PRODUCE_SERVICE_START_PORT + PRODUCE_NUM + 100))  # 消费者端口从Produce端口之后
+
 echo ""
 echo "Configuration Info / 配置信息"
 echo "Produce Count: $PRODUCE_NUM"
 echo "Consumer Count: $CONSUMER_NUM"
+echo ""
+echo "Port Allocation / 端口分配:"
+echo "- Nacos: port $NACOS_PORT"
+echo "- Agent: port $AGENT_PORT"
+echo "- Admin: port $ADMIN_PORT"
+echo "- Produce service ports: $PRODUCE_SERVICE_START_PORT - $((PRODUCE_SERVICE_START_PORT + PRODUCE_NUM - 1))"
+echo "- Consumer service ports: $CONSUMER_SERVICE_START_PORT - $((CONSUMER_SERVICE_START_PORT + CONSUMER_NUM - 1))"
+echo "- Produce dubbo ports: $PRODUCE_DUBBO_START_PORT - $((PRODUCE_DUBBO_START_PORT + PRODUCE_NUM - 1))"
 
 echo ""
 echo "Configure Agent Test Parameters / 配置Agent测试参数"
@@ -34,10 +52,6 @@ AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
 
 read -p "Enter Agent serialization method / 输入Agent序列化方式: " AGENT_SERIALIZE
 AGENT_SERIALIZE=${AGENT_SERIALIZE:-hessian2}
-
-PRODUCE_SERVICE_START_PORT=8080
-PRODUCE_DUBBO_START_PORT=20880
-CONSUMER_START_PORT=8180
 
 COMPOSE_FILE="docker-compose.yml"
 echo ""
@@ -60,7 +74,7 @@ services:
       - NACOS_JVM_XMX=512m
       - NACOS_JVM_XMN=256m
     ports:
-      - "8848:8848"
+      - "${NACOS_PORT}:8848"
     volumes:
       - nacos_data:/home/nacos/data
       - nacos_logs:/home/nacos/logs
@@ -80,7 +94,7 @@ services:
       dockerfile: ./dubbo-agent/Dockerfile
     container_name: dubbo-agent
     environment:
-      - SERVER_PORT=8082
+      - SERVER_PORT=${AGENT_PORT}
       - SPRING_APPLICATION_NAME=dubbo-agent
       - NACOS_HOST=nacos-server
       - AGENT_LOADBALANCE=${AGENT_LB}
@@ -95,7 +109,7 @@ services:
       - DUBBO_REGISTRY_RECONNECT_PERIOD=5000
       - DUBBO_SHUTDOWN_WAIT_SECONDS=60
     ports:
-      - "8082:8082"
+      - "${AGENT_PORT}:${AGENT_PORT}"
     volumes:
       - ./logs/agent:/app/logs
     depends_on:
@@ -132,8 +146,8 @@ do
       - SPRING_APPLICATION_NAME=${CONTAINER_NAME}
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
-      - DUBBO_REGISTER_MODE=instance
-      - AGENT_PORT=8082
+      - DUBBO_REGISTER_MODE=interface 
+      - AGENT_PORT=${AGENT_PORT}
       - DUBBO_PROTOCOL_PORT=${PRODUCE_DUBBO_PORT}
       - DUBBO_REGISTER_MODE=instance
       - DUBBO_PROTOCOL_NAME=dubbo
@@ -161,7 +175,7 @@ done
 # Generate Consumers
 for (( i=1; i<=CONSUMER_NUM; i++ ))
 do
-  CONSUMER_PORT=$((CONSUMER_START_PORT + i - 1))
+  CONSUMER_PORT=$((CONSUMER_SERVICE_START_PORT + i - 1))
 
   if [ $i -eq 1 ]; then
     CONTAINER_NAME="dubbo-consumer"
@@ -182,7 +196,7 @@ do
       - CONSUMER_PORT=${CONSUMER_PORT}
       - SPRING_APPLICATION_NAME=${CONTAINER_NAME}
       - AGENT_HOST=dubbo-agent
-      - AGENT_PORT=8082
+      - AGENT_PORT=${AGENT_PORT}
       - NACOS_HOST=nacos-server
       - DUBBO_CONSUMER_LOADBALANCE=roundrobin
       - DUBBO_QOS_ENABLE=false
@@ -234,7 +248,7 @@ cat >> $COMPOSE_FILE << EOF
       - admin.config-center=nacos://nacos-server:8848
       - admin.metadata-report.address=nacos://nacos-server:8848
     ports:
-      - "8083:8080"
+      - "${ADMIN_PORT}:8080"
     depends_on:
       nacos:
         condition: service_healthy
@@ -257,32 +271,50 @@ echo "✅ Generation completed! / 生成完成！"
 echo "File location: $(pwd)/$COMPOSE_FILE / 文件位置: $(pwd)/$COMPOSE_FILE"
 echo ""
 echo "Service Port Mapping / 服务端口映射:"
-echo "--------------------------------------"
-echo "Nacos: localhost:8848"
-echo "Dubbo Admin: localhost:8083"
-echo "Dubbo Agent: localhost:8082"
+echo "========================================="
+echo "Core Services / 核心服务:"
+echo "-----------------------------------------"
+echo "Nacos:          localhost:${NACOS_PORT}"
+echo "Dubbo Admin:    localhost:${ADMIN_PORT}"
+echo "Dubbo Agent:    localhost:${AGENT_PORT}"
 echo ""
+echo "Produces / 生产者 ($PRODUCE_NUM instances):"
+echo "-----------------------------------------"
 for (( i=1; i<=PRODUCE_NUM; i++ ))
 do
   PRODUCE_SERVICE_PORT=$((PRODUCE_SERVICE_START_PORT + i - 1))
   PRODUCE_DUBBO_PORT=$((PRODUCE_DUBBO_START_PORT + i - 1))
   if [ $i -eq 1 ]; then
-    echo "Dubbo Produce 1: localhost:${PRODUCE_SERVICE_PORT} (dubbo://localhost:${PRODUCE_DUBBO_PORT})"
+    echo "Dubbo Produce 1:     service=localhost:${PRODUCE_SERVICE_PORT}"
+    echo "                     dubbo=localhost:${PRODUCE_DUBBO_PORT}"
   else
-    echo "Dubbo Produce ${i}: localhost:${PRODUCE_SERVICE_PORT} (dubbo://localhost:${PRODUCE_DUBBO_PORT})"
+    echo "Dubbo Produce ${i}:     service=localhost:${PRODUCE_SERVICE_PORT}"
+    echo "                     dubbo=localhost:${PRODUCE_DUBBO_PORT}"
+  fi
+  if [ $i -lt $PRODUCE_NUM ]; then
+    echo ""
   fi
 done
 
+echo ""
+echo "Consumers / 消费者 ($CONSUMER_NUM instances):"
+echo "-----------------------------------------"
 for (( i=1; i<=CONSUMER_NUM; i++ ))
 do
-  CONSUMER_PORT=$((CONSUMER_START_PORT + i - 1))
+  CONSUMER_PORT=$((CONSUMER_SERVICE_START_PORT + i - 1))
   if [ $i -eq 1 ]; then
-    echo "Dubbo Consumer 1: localhost:${CONSUMER_PORT}"
+    echo "Dubbo Consumer 1:     localhost:${CONSUMER_PORT}"
   else
-    echo "Dubbo Consumer ${i}: localhost:${CONSUMER_PORT}"
+    echo "Dubbo Consumer ${i}:     localhost:${CONSUMER_PORT}"
   fi
 done
-echo "--------------------------------------"
+echo "========================================="
+echo ""
+echo "Port Range Summary / 端口范围摘要:"
+echo "- Nacos/Admin/Agent: ${NACOS_PORT}, ${ADMIN_PORT}, ${AGENT_PORT}"
+echo "- Produce HTTP Ports: ${PRODUCE_SERVICE_START_PORT} - $((PRODUCE_SERVICE_START_PORT + PRODUCE_NUM - 1))"
+echo "- Produce Dubbo Ports: ${PRODUCE_DUBBO_START_PORT} - $((PRODUCE_DUBBO_START_PORT + PRODUCE_NUM - 1))"
+echo "- Consumer Ports: ${CONSUMER_SERVICE_START_PORT} - $((CONSUMER_SERVICE_START_PORT + CONSUMER_NUM - 1))"
 echo ""
 echo "Start command: / 启动命令:"
 echo "docker-compose -f $COMPOSE_FILE up -d --build"
