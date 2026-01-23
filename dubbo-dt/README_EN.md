@@ -28,16 +28,16 @@ docker compose up -d
 
 #### 2. Configuration Parameters (Optional)
 
-| Parameter                     | Description                         | Default Value  |
-| :---------------------------- | :---------------------------------- | :------------- |
-| Dubbo Consumer Count          | Enter the number of Consumers       | 1              |
-| Agent Load Balancing Strategy | Enter Agent load balancing strategy | ConsistentHash |
-| Agent Test Mode               | Enter Agent test method             | FIXED_COUNT    |
-| Agent Test Duration           | Enter Agent test duration (seconds) | 100 seconds    |
-| Agent Test Request Count      | Enter Agent total test requests     | 100 times      |
-| Agent Serialization Method    | Enter Agent serialization method    | hessian2       |
-| Agent Namespace               | Agent namespace                     | dubbo-agent    |
-| Dubbo Provider Count          | Enter Provider count                | 10             |
+| Parameter                     | Description                         | Default Value                                                |
+| :---------------------------- | :---------------------------------- | :----------------------------------------------------------- |
+| Dubbo Consumer Count          | Enter the number of Consumers       | 1                                                            |
+| Agent Load Balancing Strategy | Enter Agent load balancing strategy | ConsistentHash                                               |
+| Agent Test Mode               | Enter Agent test method             | FIXED_COUNT (Default Fixed Mode) For example: SELFFUNCTION (Self-test Mode) DURATION (Duration Mode) |
+| Agent Test Duration           | Enter Agent test duration (seconds) | 100 seconds                                                  |
+| Agent Test Request Count      | Enter Agent total test requests     | 100 times                                                    |
+| Agent Serialization Method    | Enter Agent serialization method    | hessian2                                                     |
+| Agent Namespace               | Agent namespace                     | dubbo-agent                                                  |
+| Dubbo Provider Count          | Enter Provider count                | 10                                                           |
 
 #### 3. Generated Results (Optional)
 

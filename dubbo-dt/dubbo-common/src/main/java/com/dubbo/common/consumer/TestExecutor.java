@@ -43,6 +43,9 @@ public class TestExecutor {
                 case DURATION:
                     executeDurationTest(config, dubboMethods);
                     break;
+		case SELFFUNCTION:
+                    executeIsSelfFunction(config);
+		    break;
                 default:
                     throw new UnsupportedOperationException("not support test mode： " + config.getTestMode());
             }
@@ -93,6 +96,23 @@ public class TestExecutor {
         }
     }
 
+    private void executeIsSelfFunction(TestConfig config, List<Method> dubboMothod) {
+        long endTime = System.currentTimeMillis() + (config.getDurationSeconds() * 1000L);
+        AtomicInteger requestCount = new AtomicInteger(0);
+
+        while (System.currentTimeMillis() < endTime && isRunning) {
+            try {
+                long sleepTime = calculateRequestInterval(config);
+                if (sleepTime > 0) {
+                    Thread.sleep(sleepTime);
+                }
+
+            } catch (Exception e) {
+            } finally {
+                requestCount.incrementAndGet();
+            }
+        }
+    }
     private void executeDurationTest(TestConfig config, List<Method> dubboMothod) {
         long endTime = System.currentTimeMillis() + (config.getDurationSeconds() * 1000L);
         AtomicInteger requestCount = new AtomicInteger(0);

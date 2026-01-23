@@ -30,16 +30,16 @@ docker compose up -d
 
 #### 2.配置参数（可选）
 
-| 参数               | 描述                      | 默认值         |
-| :----------------- | :------------------------ | :------------- |
-| Dubbo Consumer数量 | 输入Consumer数量          | 1              |
-| Agent负载均衡策略  | 输入Agent负载均衡策略     | ConsistentHash |
-| Agent测试模式      | 输入Agent的测试方法       | FIXED_COUNT    |
-| Agent测试时长      | 输入Agent测试持续时间(秒) | 100秒          |
-| Agent测试请求数    | 输入Agent测试请求总数     | 100次          |
-| Agent序列化方式    | 输入Agent序列化方式       | hessian2       |
-| Agent命名空间      | agent的命名空间           | dubbo-agent    |
-| Dubbo Provider数量 | 输入Provider数量          | 10             |
+| 参数               | 描述                      | 默认值                                                       |
+| :----------------- | :------------------------ | :----------------------------------------------------------- |
+| Dubbo Consumer数量 | 输入Consumer数量          | 1                                                            |
+| Agent负载均衡策略  | 输入Agent负载均衡策略     | ConsistentHash                                               |
+| Agent测试模式      | 输入Agent的测试方法       | FIXED_COUN(默认固定模式) 比如：SELFFUNCTION(自测模式) DURATION(持续时间模式) |
+| Agent测试时长      | 输入Agent测试持续时间(秒) | 100秒(如果需要测试自己的方法，就必须加这个)                  |
+| Agent测试请求数    | 输入Agent测试请求总数     | 100次                                                        |
+| Agent序列化方式    | 输入Agent序列化方式       | hessian2                                                     |
+| Agent命名空间      | agent的命名空间           | dubbo-agent                                                  |
+| Dubbo Provider数量 | 输入Provider数量          | 10                                                           |
 
 #### 3.生成结果（可选）
 
