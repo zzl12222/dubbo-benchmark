@@ -100,7 +100,6 @@ services:
       - "8082:8082"
     volumes:
       - ./logs/agent:/app/logs
-      - .:/app
     depends_on:
       nacos:
         condition: service_healthy
