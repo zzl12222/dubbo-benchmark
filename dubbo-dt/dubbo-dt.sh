@@ -37,8 +37,8 @@ AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
 read -p "Enter Agent serialization method / 输入Agent序列化方式 (默认/Defaul:hessian2): " AGENT_SERIALIZE
 AGENT_SERIALIZE=${AGENT_SERIALIZE:-hessian2}
 
-PROVIDER_SERVICE_START_PORT=8080
-PROVIDER_DUBBO_START_PORT=20880
+PROVIDER_SERVICE_START_PORT=8000
+PROVIDER_DUBBO_START_PORT=20000
 CONSUMER_START_PORT=8180
 
 COMPOSE_FILE="docker-compose.yml"
@@ -201,7 +201,7 @@ do
       - dubbo-cache:/root/.dubbo
     depends_on:
       nacos:
-        condition: service_healthy
+        condition: service_health
       dubbo-agent:
         condition: service_started
 EOF
