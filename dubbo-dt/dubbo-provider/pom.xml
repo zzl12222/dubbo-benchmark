@@ -53,7 +53,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.dubbo.provider.ProduceApplication</mainClass>
+                    <mainClass>com.dubbo.provider.ProvideApplication</mainClass>
                 </configuration>
                 <version>${spring-boot.version}</version>
                 <executions>
