@@ -96,7 +96,7 @@ public class TestExecutor {
         }
     }
 
-    private void executeIsSelfFunction(TestConfig config, List<Method> dubboMothod) {
+    private void executeIsSelfFunction(TestConfig config) {
         long endTime = System.currentTimeMillis() + (config.getDurationSeconds() * 1000L);
         AtomicInteger requestCount = new AtomicInteger(0);
 

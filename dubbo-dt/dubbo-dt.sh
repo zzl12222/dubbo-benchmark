@@ -201,7 +201,7 @@ do
       - dubbo-cache:/root/.dubbo
     depends_on:
       nacos:
-        condition: service_health
+        condition: service_healthy
       dubbo-agent:
         condition: service_started
 EOF
