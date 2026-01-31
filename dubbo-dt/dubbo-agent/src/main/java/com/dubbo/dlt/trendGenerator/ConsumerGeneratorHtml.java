@@ -7,10 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class ConsumerGeneratorHtml {
     private static final Logger log = LoggerFactory.getLogger(ConsumerGeneratorHtml.class);
+    private static final String RESULT_DIR = "result";
 
     public static String generateHtmlPageCN(String testData) {
         String html = "<!DOCTYPE html>\n" +
@@ -2056,7 +2058,8 @@ public class ConsumerGeneratorHtml {
         }
 
     }
-    public static void writeHtmlToFile(String htmlContent, String filePath) throws IOException {
+    public static void writeHtmlToFile(String htmlContent, String fileName) throws IOException {
+        String filePath = Paths.get(RESULT_DIR, fileName).toString();
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {

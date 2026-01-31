@@ -21,11 +21,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @ChannelHandler.Sharable
 public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
     private static final Logger logger = LoggerFactory.getLogger(AgentNettyHandler.class);
+    private static final String RESULT_DIR = "result";
     private  NettyServer nettyServer;
     private  TestConfig testConfig;
     public AgentNettyHandler(NettyServer nettyServer ,TestConfig testconfig) {
@@ -114,10 +116,11 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
         }
 
     }
-    public static void appendTestResultToFile(ConsumerTestResult testResult, String filePath) throws IOException {
-        if (testResult == null || filePath == null || filePath.trim().isEmpty()) {
+    public static void appendTestResultToFile(ConsumerTestResult testResult, String fileName) throws IOException {
+        if (testResult == null || fileName == null || fileName.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid parameter");
         }
+        String filePath = Paths.get(RESULT_DIR, fileName).toString();
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
@@ -133,10 +136,11 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
         );
 
     }
-    public static void appendProvideTestResultToFile(String testResult, String filePath) throws IOException {
-        if (testResult == null || filePath == null || filePath.trim().isEmpty()) {
+    public static void appendProvideTestResultToFile(String testResult, String fileName) throws IOException {
+        if (testResult == null || fileName == null || fileName.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid parameter");
         }
+        String filePath = Paths.get(RESULT_DIR, fileName).toString();
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {

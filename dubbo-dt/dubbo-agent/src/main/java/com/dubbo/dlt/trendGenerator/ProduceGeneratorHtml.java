@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +24,7 @@ public class ProduceGeneratorHtml {
 
     private static final DateTimeFormatter SECOND_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter MINUTE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final String RESULT_DIR = "result";
 
     public static void generateCallTrendHtml(String rawEscapeJson, String htmlGeneratePath) throws IOException {
         String cleanJson = cleanEscapeJson(rawEscapeJson);
@@ -163,7 +165,8 @@ public class ProduceGeneratorHtml {
     }
 
 
-    public static void writeHtmlToFile(String htmlContent, String filePath) throws IOException {
+    public static void writeHtmlToFile(String htmlContent, String fileName) throws IOException {
+        String filePath = Paths.get(RESULT_DIR, fileName).toString();
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {

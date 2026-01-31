@@ -24,9 +24,10 @@ chmod +x dubbo-dt.sh
 
 # 启动所有服务
 docker compose up -d
+
+#最后进入到结果文件目录里面
+cd result
 ```
-
-
 
 #### 2.配置参数（可选）
 

@@ -22,6 +22,9 @@ chmod +x dubbo-dt.sh
 
 # Start all services
 docker compose up -d
+
+#go to the results directory
+cd result
 ```
 
 
