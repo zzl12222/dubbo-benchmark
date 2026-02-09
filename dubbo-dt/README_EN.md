@@ -146,3 +146,14 @@ java
 ```java
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "provider")
 ```
+
+## Result:Dubbo Performance Test Result File Naming Convention
+
+### File Naming Rules Overview
+
+| File Category                      | File Prefix            | Middle Part     | Suffix | Language Code | File Format | Description                                                  |
+| :--------------------------------- | :--------------------- | :-------------- | :----- | :------------ | :---------- | :----------------------------------------------------------- |
+| **Consumer Test Detailed Results** | `consumer-result-`     | `{methodName}`  | -      | -             | `.txt`      | Records detailed invocation information for specific methods, including response time, status, and other raw data |
+| **Provider Test Detailed Results** | `provide-result-`      | `{serviceName}` | -      | -             | `.txt`      | Records raw test data for specific provider services, including invocation statistics and performance metrics |
+| **Consumer Test Report**           | `{testMode}-consumer-` | `{serviceName}` | -      | `CN`/`EN`     | `.html`     | Visual test report for consumer services, containing performance charts and statistical summaries |
+| **Provider Trend Analysis Report** | `provide-ressult-`     | `{serviceName}` | -      | `CN`/`EN`     | `.html`     | Call trend analysis report for provider services, displaying time-series performance data |

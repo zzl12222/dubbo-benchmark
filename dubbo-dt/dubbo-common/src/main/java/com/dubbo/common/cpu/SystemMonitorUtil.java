@@ -1,6 +1,5 @@
 package com.dubbo.common.cpu;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.management.ManagementFactory;
@@ -8,8 +7,8 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -17,8 +16,8 @@ public class SystemMonitorUtil {
     private static AtomicInteger count = new AtomicInteger(0);
     public static Date startTime = new Date();
     public static Date endTime = new Date();
-    public static Map<Integer, Integer> CPU_USAGE = new HashMap<Integer, Integer>();
-    public static Map<Integer, Integer> MEMORY_USAGE = new HashMap<Integer, Integer>();
+    public static Map<Integer, Integer> CPU_USAGE = new ConcurrentHashMap<>();
+    public static Map<Integer, Integer> MEMORY_USAGE = new ConcurrentHashMap<>();
     private static final OperatingSystemMXBean OS_MX_BEAN = ManagementFactory.getOperatingSystemMXBean();
     private static final MemoryMXBean MEMORY_MX_BEAN = ManagementFactory.getMemoryMXBean();
     private static final int CPU_CORES = OS_MX_BEAN.getAvailableProcessors();

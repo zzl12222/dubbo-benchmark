@@ -2,10 +2,8 @@ package com.dubbo.common.filter;
 
 
 import com.dubbo.common.aop.DubboInvokeStat;
-import com.dubbo.common.aop.DubboStatManager;
 import com.dubbo.common.entry.CallResultManager;
 import com.dubbo.common.entry.ProduceResult;
-import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
@@ -17,11 +15,9 @@ import java.util.Date;
 @Activate(group = {CommonConstants.PROVIDER})
 public class ProduceDubboFilter implements Filter {
     private final CallResultManager callResultManager = CallResultManager.getInstance();
-    private DubboStatManager dubboStatManager =  DubboStatManager.getInstance();
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        URL url = invoker.getUrl();
         Class<?> serviceInterface = invoker.getInterface();
         String methodName = invocation.getMethodName();
         String interfaceName = invoker.getInterface().getSimpleName();

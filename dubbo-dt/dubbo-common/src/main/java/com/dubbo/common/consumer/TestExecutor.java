@@ -43,7 +43,7 @@ public class TestExecutor {
                 case DURATION:
                     executeDurationTest(config, dubboMethods);
                     break;
-		case SELFFUNCTION:
+		        case SELFFUNCTION:
                     executeIsSelfFunction(config);
 		    break;
                 default:

@@ -34,24 +34,19 @@ public class SimpleDubboScanner implements CommandLineRunner {
 
     private final Map<Class<?>, List<Method>> interfaceMethods = new HashMap<>();
     private EnableDubboTest enableDubboTest;
-    // 新增：标记是否需要执行扫描（consumer/ALL=true，provider=false）
     private boolean needScan = false;
 
     @PostConstruct
     public void init() throws ClassNotFoundException {
-        // 1. 先尝试获取主类上的EnableDubboTest注解
         boolean hasAnnotation = isAnnotationPresentOnMainClass(EnableDubboTest.class);
         if (hasAnnotation) {
             String mainClassName = getMainClassName();
             Class<?> mainClass = Class.forName(mainClassName);
             this.enableDubboTest = mainClass.getAnnotation(EnableDubboTest.class);
 
-            // 2. 核心逻辑：根据testModel判断是否需要扫描
             if (this.enableDubboTest != null) {
                 String testModel = this.enableDubboTest.testModel();
-                // 统一转大写，避免大小写问题
                 String upperTestModel = (testModel == null ? "" : testModel.trim().toUpperCase());
-                // consumer/ALL需要扫描，provider不需要
                 this.needScan = TEST_MODEL_CONSUMER.toUpperCase().equals(upperTestModel)
                         || TEST_MODEL_ALL.toUpperCase().equals(upperTestModel);
 
@@ -62,15 +57,12 @@ public class SimpleDubboScanner implements CommandLineRunner {
         } else {
             this.enableDubboTest = null;
             this.needScan = false;
-            log.warn("❌ 主类未找到@EnableDubboTest注解，跳过扫描");
         }
     }
 
     @Override
     public void run(String... args) throws Exception {
-        // 核心修改：仅当needScan=true时才执行扫描（consumer/ALL）
         if (!needScan) {
-            log.info("📌 testModel为provider/无注解，跳过Dubbo扫描");
             return;
         }
 

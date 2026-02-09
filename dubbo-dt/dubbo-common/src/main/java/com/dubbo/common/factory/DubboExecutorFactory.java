@@ -6,38 +6,23 @@ import com.dubbo.common.entry.TestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.common.utils.StringUtils;
-import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
-import org.apache.dubbo.config.RegistryConfig;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
 public class DubboExecutorFactory implements DubbTestExecutorFactory{
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final ApplicationConfig applicationConfig;
-    private final RegistryConfig registryConfig;
 
     public DubboExecutorFactory() {
-        applicationConfig = new ApplicationConfig();
-        applicationConfig.setName("dubbo-consumer-1");
-        applicationConfig.setQosEnable(false);
-
-        registryConfig = new RegistryConfig();
-        registryConfig.setAddress("nacos://10.6.5.179:8848");
-        registryConfig.setProtocol("nacos");
-        registryConfig.setCheck(false);
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("registry-type", "service");
-        registryConfig.setParameters(parameters);
     }
     public Map<String, Object> executeAllMethods(TestConfig config, List<Method> methods) {
-        Map<String, Object> results = new HashMap<>();
+        Map<String, Object> results = new ConcurrentHashMap<>();
 
         for (Method method : methods) {
             try {
@@ -130,8 +115,6 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
         try {
             Class<?> serviceInterface = method.getDeclaringClass();
             reference = new ReferenceConfig<>();
-            reference.setApplication(applicationConfig);
-            reference.setRegistry(registryConfig);
             reference.setInterface(serviceInterface);
             reference.setLoadbalance(config.getLocadbance());
             reference.setCheck(false);

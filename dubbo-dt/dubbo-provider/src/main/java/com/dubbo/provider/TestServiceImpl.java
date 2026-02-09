@@ -1,16 +1,12 @@
 package com.dubbo.provider;
 
-import com.dubbo.common.aop.DubboStatManager;
 import com.dubbo.common.api.TestService;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @DubboService
 public class TestServiceImpl implements TestService {
 
-    @Autowired
-    private DubboStatManager statManager;
     @Override
     public String sayHello(String name) {
         try {

@@ -13,7 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(scanBasePackages = {"com.dubbo.common","com.dubbo.consumer"})
 @EnableDubbo
-@EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "consumer")
+@EnableDubboTest(basePackages = {"com.dubbo.common"}, testModel = "consumer")
 public class ConsumerApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = 
