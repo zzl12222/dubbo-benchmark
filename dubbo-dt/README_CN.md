@@ -138,6 +138,12 @@ public enum DubboInvokeEnum {
 | basePackages | 抽象对象的包路径 | com.dubbo.common      |
 | testModel    | 当前服务是哪一方 | consumer/provider/all |
 
+### 协议转换:
+
+> ***不同的协议使用不同的方法创建，只要抽象对象上面可以加到@DubboInvokeStat注解，启动类上面有@EnableDubboTest注解，就可以使用基测工具***
+
+
+
 ## 结果：Dubbo性能测试结果文件命名规则说明
 
 | 文件类别               | 文件前缀               | 中间部分       | 后缀部分 | 语言标识  | 文件格式 | 说明                                                     |
