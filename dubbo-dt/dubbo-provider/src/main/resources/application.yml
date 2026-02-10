@@ -1,5 +1,5 @@
 server:
-  port: ${PROVIDE_SERVICE:8080}
+  port: ${PROVIDE_SERVICE:8001}
 
 spring:
   application:
@@ -8,6 +8,7 @@ spring:
 dubbo:
   application:
     name: ${spring.application.name}
+    qos-enable: false
   cache:
     base-path: ./.dubbo/${spring.application.name}
     file:

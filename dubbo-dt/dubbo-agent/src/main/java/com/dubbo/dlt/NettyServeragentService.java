@@ -51,12 +51,12 @@ public class NettyServeragentService {
     public void start() {
         nettyServerThread = new Thread(() -> {
             try {
-                String spacename = safeGetEnv("SPRING_APPLICATION_NAME", "dubbo-agent");
+                String spacename = safeGetEnv("SPRING_APPLICATION_NAME", "agentProto");
                 String servicePort = safeGetEnv("SERVICE_PORT", "8082");
                 Long durationSeconds = safeGetDurationSeconds("AGENT_DURATION_SECONDS", 1000L);
                 Integer requestCount = safeGetEnvInt("AGENT_REQUEST_COUNT", 100);
                 String loadbalacne = safeGetEnv("AGENT_LOCADBANCE", "random");
-                String serialization = safeGetEnv("AGENT_SERIALIZATION", "hessian2");
+                String serialization = safeGetEnv("AGENT_SERIALIZATION", "protobuf");
                 String testModeString = safeGetEnv("AGENT_TEST_MODE", "FIXED_COUNT");
                 TestMode testMode =  TestMode.valueOf(testModeString);
                 TestConfig testConfig = new TestConfig();

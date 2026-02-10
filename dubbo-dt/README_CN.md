@@ -80,10 +80,13 @@ java -DSPRING_APPLICATION_NAME=dubbo-agent -DSERVICE_PORT=8802 -jar
 在Consumer上添加注解：
 
 ```java
-@EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "consumer")
+@EnableDubboTest(basePackages = {"com.dubbo.common"}, testModel = "consumer")
 ```
 
-
+| 参数名称     | 说明             | 举例                  |
+| ------------ | ---------------- | --------------------- |
+| basePackages | 抽象对象的包路径 | com.dubbo.common      |
+| testModel    | 当前服务是哪一方 | consumer/provider/all |
 
 在抽象API上添加注解：
 
@@ -91,15 +94,22 @@ java -DSPRING_APPLICATION_NAME=dubbo-agent -DSERVICE_PORT=8802 -jar
 @DubboInvokeStat(namespace = "agentname", argKey = "AGENT_NAME_HELLO", argValue = DubboInvokeEnum.class)
 ```
 
-
+| 参数名称  | 说明                      | 举例                  | 是否必要 |
+| --------- | ------------------------- | --------------------- | -------- |
+| namespace | 当前agent的名称可以多启动 | agentname             | 是       |
+| argKey    | mock数据的key             | AGENT_NAME_HELLO      | 是       |
+| argValue  | mock数据的储存对象        | DubboInvokeEnum.class | 是       |
 
 **Mock数据枚举类**
 
 ```java
 public enum DubboInvokeEnum {
-    AGENT_NAME_HELLO(new DubboTest("你好")),
-    AGENT_NAME_HELLO2(new DubboTest("你好2")),
-    AGENT_OTHER(new DubboTest("扩展测试"));
+    AGENT_NAME_HELLO("你好"),
+    AGENT_NAME_HELLO2("你好2"),
+    AGENT_OTHER("扩展测试"),
+    AGENT_PROTO(UserProto.UserRequest.newBuilder()
+            .setName("你好")
+            .build());
     
     private Object value;
     
@@ -115,25 +125,18 @@ public enum DubboInvokeEnum {
 
 
 
-**DubboTest测试参数类**
-
-```java
-@Data
-@AllArgsConstructor
-public class DubboTest<T> {
-    private T name;
-}
-```
-
-
-
 **Provider端配置**
 
 在Provider上添加注解：
 
 ```java
-@EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "provider")
+@EnableDubboTest(basePackages = {"com.dubbo.common"}, testModel = "provider")
 ```
+
+| 参数名称     | 说明             | 举例                  |
+| ------------ | ---------------- | --------------------- |
+| basePackages | 抽象对象的包路径 | com.dubbo.common      |
+| testModel    | 当前服务是哪一方 | consumer/provider/all |
 
 ## 结果：Dubbo性能测试结果文件命名规则说明
 

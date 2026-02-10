@@ -1,12 +1,16 @@
 package com.dubbo.common.constant;
 
 import com.alibaba.fastjson2.JSON;
-
+import com.dubbo.common.api.UserProto;
+import com.dubbo.common.api.UserProto.UserRequest;
 
 public enum DubboInvokeEnum  {
-    AGENT_NAME_HELLO(new DubboTest("你好")),
-    AGENT_NAME_HELLO2(new DubboTest("你好号2")),
-    AGENT_OTHER(new DubboTest("扩展测试"));
+    AGENT_NAME_HELLO("你好"),
+    AGENT_NAME_HELLO2("你好号2"),
+    AGENT_OTHER("扩展测试"),
+    AGENT_PROTO(UserProto.UserRequest.newBuilder()
+            .setName("你好")
+            .build());
     private Object value;
 
     DubboInvokeEnum(Object reqObj) {

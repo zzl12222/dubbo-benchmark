@@ -32,7 +32,7 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
                 }
                 Class<?> argClass =  annotation.argValue();
                 String argKey = annotation.argKey();
-                String argValue = processArgValueClass(argClass, argKey);
+                Object argValue = processArgValueClass(argClass, argKey);
                 Object result = executeMethod(config, method, argValue);
                 String key = method.getDeclaringClass().getSimpleName() + "." + method.getName();
                 results.put(key, result);
@@ -43,7 +43,7 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
         }
         return results;
     }
-    private static String processArgValueClass(Class<?> argClass, String methodName) {
+    private static Object processArgValueClass(Class<?> argClass, String methodName) {
         if (argClass.isEnum() && StringUtils.hasText(methodName)) {
             try {
                 return findEnumByName(argClass, methodName);
@@ -51,22 +51,26 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
                 try {
                     return findEnumByProperties(argClass, methodName);
                 } catch (Exception e2) {
-                    System.out.println("找不到对应的枚举常量: " + methodName);
+                    throw new RuntimeException("not Find args");
                 }
             }
         }
         return null;
     }
-
-    private static String findEnumByName(Class<?> enumClass, String name) {
-        String upperName = name.toUpperCase();
-        Method valueOfMethod = null;
+    private static Object findEnumByName(Class<?> enumClass, String name) {
         try {
-            valueOfMethod = enumClass.getMethod("valueOf", String.class);
+            Method valueOfMethod = enumClass.getMethod("valueOf", String.class);
+
+            String upperName = name.toUpperCase();
             Enum<?> enumValue = (Enum<?>) valueOfMethod.invoke(null, upperName);
-            return JSON.toJSON(enumValue.getClass().getMethod("getValue").invoke(enumValue)).toString();
+
+            Method getValueMethod = enumClass.getMethod("getValue");
+            return getValueMethod.invoke(enumValue);
+
+        } catch (NoSuchMethodException e) {
+           throw new RuntimeException("convert error");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to get enum value for: " + name, e);
         }
     }
 
@@ -110,7 +114,7 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
         throw new IllegalArgumentException("not Find enum");
     }
 
-    public Object executeMethod(TestConfig config, Method method, String argValue) {
+    public Object executeMethod(TestConfig config, Method method, Object argValue) {
         ReferenceConfig<?> reference = null;
         try {
             Class<?> serviceInterface = method.getDeclaringClass();
@@ -130,30 +134,33 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
             exceptionInvokeFilter(method, argValue, e);
             throw new RuntimeException("do Dubbo func fail : " + method.getName(), e);
         } finally {
-            if (reference != null) {
-                try {
-                    reference.destroy();
-                } catch (Exception e) {
+            synchronized (this) {
+                if (reference != null) {
+                    try {
+                        reference.destroy();
+                    } catch (Exception e) {
+                        log.warn("Failed to destroy reference", e);
+                    } finally {
+                        reference = null;
+                    }
                 }
             }
         }
     }
 
 
-    private Object[] parseArgValue(String argValue, Class<?>[] parameterTypes) throws Exception {
-        if (argValue == null || argValue.trim().isEmpty()) {
+    private Object[] parseArgValue(Object argValue, Class<?>[] parameterTypes) throws Exception {
+        if (argValue == null) {
             return new Object[0];
         }
-
-        Object parsed = objectMapper.readValue(argValue, Object.class);
 
         if (parameterTypes.length == 0) {
             return new Object[0];
         } else if (parameterTypes.length == 1) {
-            Object converted = convertSingleValue(parsed, parameterTypes[0]);
+            Object converted = convertSingleValue(argValue, parameterTypes[0]);
             return new Object[]{converted};
-        } else if (parsed instanceof List) {
-            List<?> list = (List<?>) parsed;
+        } else if (argValue instanceof List) {
+            List<?> list = (List<?>) argValue;
             Object[] args = new Object[Math.min(list.size(), parameterTypes.length)];
             for (int i = 0; i < args.length; i++) {
                 args[i] = convertSingleValue(list.get(i), parameterTypes[i]);
@@ -328,7 +335,7 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
     }
 
     @Override
-    public void exceptionInvokeFilter(Method method, String argValue, Exception e) {
+    public void exceptionInvokeFilter(Method method, Object argValue, Exception e) {
 
     }
 }

@@ -1,6 +1,7 @@
 package com.dubbo.provider;
 
 import com.dubbo.common.api.TestService;
+import com.dubbo.common.api.UserProto;
 import org.apache.dubbo.config.annotation.DubboService;
 
 
@@ -28,5 +29,10 @@ public class TestServiceImpl implements TestService {
     @Override
     public String sayHeelow(String name) {
         return "";
+    }
+
+    @Override
+    public UserProto.UserResponse sayHello(UserProto.UserRequest request) {
+        return UserProto.UserResponse.newBuilder().build();
     }
 }

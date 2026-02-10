@@ -81,33 +81,43 @@ java -DSPRING_APPLICATION_NAME=dubbo-agent -DSERVICE_PORT=8802 -jar
 
 Add annotation on Consumer:
 
-java
-
 ```java
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "consumer")
 ```
+
+### Configuration Parameters:
+
+| Parameter    | Description                                                 | Example Value         |
+| :----------- | :---------------------------------------------------------- | :-------------------- |
+| basePackages | Base package paths for scanning abstract service interfaces | com.dubbo.common      |
+| testModel    | Service role for testing (consumer, provider, or both)      | consumer/provider/all |
 
 
 
 Add annotation on abstract API:
 
-java
-
 ```java
 @DubboInvokeStat(namespace = "agentname", argKey = "AGENT_NAME_HELLO", argValue = DubboInvokeEnum.class)
 ```
 
+### @DubboInvokeStat Parameters:
 
+| Attribute | Description                       | Sample                | Required |
+| :-------- | :-------------------------------- | :-------------------- | :------- |
+| namespace | Agent name identifier             | "agentname"           | Yes      |
+| argKey    | Key for test data lookup          | "AGENT_NAME_HELLO"    | Yes      |
+| argValue  | Class containing test data values | DubboInvokeEnum.class | Yes      |
 
 **Mock Data Enumeration Class**
 
-java
-
 ```java
 public enum DubboInvokeEnum {
-    AGENT_NAME_HELLO(new DubboTest("Hello")),
-    AGENT_NAME_HELLO2(new DubboTest("Hello2")),
-    AGENT_OTHER(new DubboTest("Extended test"));
+    AGENT_NAME_HELLO("Hello"),
+    AGENT_NAME_HELLO2("Hello2"),
+    AGENT_OTHER("Extended test"),
+    AGENT_PROTO(UserProto.UserRequest.newBuilder()
+            .setName("HELLO")
+            .build());
     
     private Object value;
     
@@ -123,29 +133,24 @@ public enum DubboInvokeEnum {
 
 
 
-**DubboTest Test Parameter Class**
-
-java
-
-```java
-@Data
-@AllArgsConstructor
-public class DubboTest<T> {
-    private T name;
-}
-```
-
-
-
 **Provider End Configuration**
 
 Add annotation on Provider:
 
-java
-
 ```java
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "provider")
 ```
+
+### Configuration Parameters:
+
+| Parameter    | Description                                                 | Example Value         |
+| :----------- | :---------------------------------------------------------- | :-------------------- |
+| basePackages | Base package paths for scanning abstract service interfaces | com.dubbo.common      |
+| testModel    | Service role for testing (consumer, provider, or both)      | consumer/provider/all |
+
+### Protocol Adaptation:
+
+> ***The framework supports multiple protocols with different initialization methods. Any abstract interface annotated with @DubboInvokeStat within packages scanned by @EnableDubboTest is automatically available for testing.***
 
 ## Result:Dubbo Performance Test Result File Naming Convention
 
