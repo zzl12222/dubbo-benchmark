@@ -41,6 +41,7 @@ cd result
 | Agent Serialization Method    | Enter Agent serialization method    | hessian2                                                     |
 | Agent Namespace               | Agent namespace                     | dubbo-agent                                                  |
 | Dubbo Provider Count          | Enter Provider count                | 10                                                           |
+| Agent Protocol                | Enter protocol name                 | dubbo                                                        |
 
 #### 3. Generated Results (Optional)
 
@@ -64,6 +65,7 @@ cd result
 | AGENT_LOADBALANCE       | Load balancing method | No       | random        |
 | AGENT_SERIALIZATION     | Serialization method  | No       | hessian2      |
 | AGENT_TEST_MODE         | Test method           | No       | FIXED_COUNT   |
+| AGENT_PROTOCOL          | Agent protocol        | No       | dubbo         |
 
 Startup example:
 

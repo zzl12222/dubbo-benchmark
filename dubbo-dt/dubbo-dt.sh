@@ -24,6 +24,10 @@ echo ""
 echo "Configure Agent Test Parameters / 配置Agent测试参数"
 read -p "Agent Namespace / agent的命名空间 (默认/Default:dubbo-agent):" DUBBO_AGENT
 DUBBO_AGENT=${DUBBO_AGENT:-dubbo-agent}
+
+read -p "Agent Prot / agent的端口 (默认/Default:8082):" DUBBO_AGENT_PORT
+DUBBO_AGENT_PORT=${DUBBO_AGENT_PORT:-8082}
+
 read -p "Enter Agent load balancing strategy / 输入Agent负载均衡策略(默认/Default:ConsistentHash): " AGENT_LB
 AGENT_LB=${AGENT_LB:-ConsistentHash}
 read -p "Enter Agent total test mode / 输入Agent的测试方法(FIXED_COUNT : 固定次数模式/DURATION: 持续时长模式 默认/Default: FIXED_COUNT): " AGENT_TEST_MODE
@@ -33,6 +37,9 @@ AGENT_DURATION=${AGENT_DURATION:-100}
 
 read -p "Enter Agent total test requests / 输入Agent测试请求总数 (默认/Default:100) : " AGENT_REQUEST_CNT
 AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
+
+read -p "Enter protocol name / 输入协议 (默认/Defaul:dubbo): " AGENT_PROTOCOL
+AGENT_PROTOCOL=${AGENT_PROTOCOL:-dubbo}
 
 read -p "Enter Agent serialization method / 输入Agent序列化方式 (默认/Defaul:hessian2): " AGENT_SERIALIZE
 AGENT_SERIALIZE=${AGENT_SERIALIZE:-hessian2}
@@ -82,7 +89,7 @@ services:
       dockerfile: ./dubbo-agent/Dockerfile
     container_name: ${DUBBO_AGENT}
     environment:
-      - SERVER_PORT=8082
+      - SERVER_PORT=${DUBBO_AGENT_PORT}
       - SPRING_APPLICATION_NAME=dubbo-agent
       - NACOS_HOST=nacos-server
       - AGENT_LOADBALANCE=${AGENT_LB}
@@ -136,7 +143,9 @@ do
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
       - DUBBO_REGISTER_MODE=instance
-      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_NAME=${AGENT_PROTOCOL:-dubbo}
+      - DUBBO_PROTOCOL_SERIALIZATION=${AGENT_SERIALIZE:-hessian2}
+      - AGENT_PORT=${DUBBO_AGENT_PORT}
       - DUBBO_PROTOCOL_PORT=${PROVIDER_DUBBO_PORT}
       - DUBBO_REGISTER_MODE=instance
       - DUBBO_PROTOCOL_NAME=dubbo
@@ -185,7 +194,7 @@ do
       - CONSUMER_PORT=${CONSUMER_PORT}
       - SPRING_APPLICATION_NAME=${CONTAINER_NAME}
       - AGENT_HOST=dubbo-agent
-      - AGENT_PORT=8082
+      - AGENT_PORT=${DUBBO_AGENT_PORT}
       - NACOS_HOST=nacos-server
       - DUBBO_CONSUMER_LOADBALANCE=roundrobin
       - DUBBO_QOS_ENABLE=false

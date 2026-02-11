@@ -1,6 +1,7 @@
 package com.dubbo.dlt;
 
 import com.dubbo.common.conf.TestMode;
+import com.dubbo.common.constant.Constant;
 import com.dubbo.common.entry.TestConfig;
 import com.dubbo.dlt.handler.AgentNettyHandler;
 import com.dubbo.common.netty.NettyServer;
@@ -51,15 +52,17 @@ public class NettyServeragentService {
     public void start() {
         nettyServerThread = new Thread(() -> {
             try {
-                String spacename = safeGetEnv("SPRING_APPLICATION_NAME", "agentProto");
-                String servicePort = safeGetEnv("SERVICE_PORT", "8082");
-                Long durationSeconds = safeGetDurationSeconds("AGENT_DURATION_SECONDS", 1000L);
-                Integer requestCount = safeGetEnvInt("AGENT_REQUEST_COUNT", 100);
-                String loadbalacne = safeGetEnv("AGENT_LOCADBANCE", "random");
-                String serialization = safeGetEnv("AGENT_SERIALIZATION", "protobuf");
-                String testModeString = safeGetEnv("AGENT_TEST_MODE", "FIXED_COUNT");
+                String spacename = safeGetEnv(Constant.SPRING_APPLICATION_NAME, Constant.SPRING_APPLICATION_NAME_DEFAULT);
+                String servicePort = safeGetEnv(Constant.SERVICE_PORT, Constant.SERVICE_PORT_DEFAULT);
+                Long durationSeconds = safeGetDurationSeconds(Constant.AGENT_DURATION_SECONDS, Constant.AGENT_DURATION_SECONDS_DEFAULT);
+                Integer requestCount = safeGetEnvInt(Constant.AGENT_REQUEST_COUNT, Constant.AGENT_REQUEST_COUNT_DEFAULT);
+                String loadbalacne = safeGetEnv(Constant.AGENT_LOCADBANCE, Constant.AGENT_LOCADBANCE_DEFAULT);
+                String serialization = safeGetEnv(Constant.AGENT_SERIALIZATION, Constant.AGENT_SERIALIZATION_DEFAULT);
+                String protocol = safeGetEnv(Constant.AGENT_PROTOCOL, Constant.AGENT_PROTOCOL_DEFAULT);
+                String testModeString = safeGetEnv(Constant.AGENT_TEST_MODE, Constant.AGENT_TEST_MODE_DEFAULT);
                 TestMode testMode =  TestMode.valueOf(testModeString);
                 TestConfig testConfig = new TestConfig();
+                testConfig.setProtocol(protocol);
                 testConfig.setLocadbance(loadbalacne);
                 testConfig.setNamespace(spacename);
                 testConfig.setDurationSeconds(durationSeconds);

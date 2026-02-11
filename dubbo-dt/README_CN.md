@@ -34,6 +34,7 @@ cd result
 | 参数               | 描述                      | 默认值                                                       |
 | :----------------- | :------------------------ | :----------------------------------------------------------- |
 | Dubbo Consumer数量 | 输入Consumer数量          | 1                                                            |
+| Agent协议方式      | 输入agent的协议           | dubbo                                                        |
 | Agent负载均衡策略  | 输入Agent负载均衡策略     | ConsistentHash                                               |
 | Agent测试模式      | 输入Agent的测试方法       | FIXED_COUN(默认固定模式) 比如：SELFFUNCTION(自测模式) DURATION(持续时间模式) |
 | Agent测试时长      | 输入Agent测试持续时间(秒) | 100秒(如果需要测试自己的方法，就必须加这个)                  |
@@ -63,6 +64,7 @@ cd result
 | AGENT_REQUEST_COUNT     | 测试次数     | 否   | 100         |
 | AGENT_LOADBALANCE       | 负载均衡方式 | 否   | random      |
 | AGENT_SERIALIZATION     | 序列化方式   | 否   | hessian2    |
+| AGENT_PROTOCOL          | 协议方式     | 否   | dubbo       |
 | AGENT_TEST_MODE         | 测试方式     | 否   | FIXED_COUNT |
 
 启动示例：

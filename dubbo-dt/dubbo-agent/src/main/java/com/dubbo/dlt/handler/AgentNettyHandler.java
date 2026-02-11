@@ -46,27 +46,28 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
             clientSession.updateHeartbeat();
         } else if (type == MessageType.REGISTER) {
             RegisterMessage registerMessage = JSONObject.parseObject(msg.getData(), RegisterMessage.class);
-            System.out.println(registerMessage);
-            System.out.println(msg.getClientId());
             try{
             ClientSession clientSession = nettyServer.getAllSessions().get(msg.getClientType() +msg.getClientId());
             if (clientSession == null) {
                 ClientSession session = new ClientSession(registerMessage.getClientId(), ctx.channel(), registerMessage.getClientType());
                 nettyServer.getAllSessions().put( msg.getClientType() + "-"+ msg.getClientId(), session);
-                if (msg.getClientType() == ClientType.CONSUMER){
-                    Message message = new Message();
+                Message message = new Message();
+                if (msg.getClientType() == ClientType.CONSUMER) {
                     message.setType(MessageType.CONTROL);
-                    TestConfig testConfig1 = new TestConfig();
-                    testConfig1.setTestMode(testConfig1.getTestMode());
-                    testConfig1.setNamespace(testConfig.getNamespace());
-                    testConfig1.setDurationSeconds(testConfig.getDurationSeconds());
-                    testConfig1.setRequestCount(testConfig.getRequestCount());
-                    testConfig1.setLocadbance(testConfig.getLocadbance());
-                    testConfig1.setTestMode(testConfig.getTestMode());
-                    testConfig1.setSerialization(testConfig.getSerialization());
-                    message.setData(JSONObject.toJSONString(testConfig1));
-                    session.getChannel().writeAndFlush(message);
-                    }
+                } else {
+                    message.setType(MessageType.ACK);
+                }
+                TestConfig testConfig1 = new TestConfig();
+                testConfig1.setTestMode(testConfig.getTestMode());
+                testConfig1.setProtocol(testConfig.getProtocol());
+                testConfig1.setNamespace(testConfig.getNamespace());
+                testConfig1.setDurationSeconds(testConfig.getDurationSeconds());
+                testConfig1.setRequestCount(testConfig.getRequestCount());
+                testConfig1.setLocadbance(testConfig.getLocadbance());
+                testConfig1.setTestMode(testConfig.getTestMode());
+                testConfig1.setSerialization(testConfig.getSerialization());
+                message.setData(JSONObject.toJSONString(testConfig1));
+                session.getChannel().writeAndFlush(message);
                 }
             }
             catch (Exception e){

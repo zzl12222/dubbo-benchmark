@@ -32,7 +32,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public UserProto.UserResponse sayHello(UserProto.UserRequest request) {
-        return UserProto.UserResponse.newBuilder().build();
+    public UserProto.UserResponse sayHellos(UserProto.UserRequest request) {
+        return UserProto.UserResponse.newBuilder().setGreeting("你好").build();
     }
 }

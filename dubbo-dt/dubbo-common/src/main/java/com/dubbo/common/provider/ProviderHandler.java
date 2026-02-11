@@ -1,18 +1,21 @@
 package com.dubbo.common.provider;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.dubbo.common.conf.ClientType;
 import com.dubbo.common.conf.MessageType;
 import com.dubbo.common.cpu.SystemMonitorUtil;
-import com.dubbo.common.entry.CallResultManager;
-import com.dubbo.common.entry.Message;
-import com.dubbo.common.entry.PResult;
-import com.dubbo.common.entry.ProduceTestResult;
+import com.dubbo.common.entry.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.apache.dubbo.config.ProtocolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Map;
 public class ProviderHandler extends SimpleChannelInboundHandler<Message> {
@@ -24,7 +27,8 @@ public class ProviderHandler extends SimpleChannelInboundHandler<Message> {
     }
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
-        if (message.getType() == MessageType.CONTROL) {
+        MessageType type = message.getType();
+        if (type == MessageType.CONTROL) {
             PResult pResult = new PResult();
             SystemMonitorUtil.stop();
             Map<Integer, Integer> memoryUsage = SystemMonitorUtil.MEMORY_USAGE;

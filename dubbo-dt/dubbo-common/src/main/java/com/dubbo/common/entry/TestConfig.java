@@ -14,6 +14,7 @@ public class TestConfig implements Serializable {
     private Integer requestCount;
     private Long durationSeconds;
     private String namespace;
+    private String protocol;
     private String locadbance;
     private String serialization;
     private Integer qpsLimit;

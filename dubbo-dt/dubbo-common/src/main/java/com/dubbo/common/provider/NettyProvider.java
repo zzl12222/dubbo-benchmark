@@ -2,6 +2,7 @@ package com.dubbo.common.provider;
 
 import com.dubbo.common.conf.ClientType;
 import com.dubbo.common.conf.MessageType;
+import com.dubbo.common.constant.Constant;
 import com.dubbo.common.cpu.SystemMonitorUtil;
 import com.dubbo.common.entry.Message;
 import com.dubbo.common.netty.NettyClient;
@@ -16,9 +17,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class NettyProvider{
-    private String agentHost = getSafeEnvString("AGENT_HOST", "localhost");
-    private int agentPort = getSafeEnvInt("AGENT_PORT", 8082);
-    private String providerId = getSafeEnvString("SPRING_APPLICATION_NAME", "provider_1");
+    private String agentHost = getSafeEnvString(Constant.AGENT_HOST, Constant.AGENT_HOST_DEFAULT);
+    private int agentPort = getSafeEnvInt(Constant.AGENT_PORT, Constant.AGENT_PORT_DEFAULT);
+    private String providerId = getSafeEnvString(Constant.PROVIDER_SPRING_APPLICATION_NAME, Constant.PROVIDER_SPRING_APPLICATION_NAME_DEFAULT);
     private NettyClient nettyClient;
     private ScheduledExecutorService scheduler;
     private volatile boolean isRegistered = false;

@@ -123,6 +123,7 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
             reference.setLoadbalance(config.getLocadbance());
             reference.setCheck(false);
             reference.setTimeout(5000);
+            reference.setProtocol(config.getProtocol());
             reference.setParameters(Collections.singletonMap("serialization", config.getSerialization()));
             Object service = reference.get();
             Object[] args = parseArgValue(argValue, method.getParameterTypes());
