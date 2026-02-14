@@ -1,20 +1,21 @@
 FROM maven:3.8.4-jdk-8 AS builder
 
 ENV TZ=Asia/Shanghai
-ENV MAVEN_OPTS="-Dmaven.repo.url=https://maven.aliyun.com/repository/public -Dmaven.repo.local=/root/.m2/repository"
 
 WORKDIR /build
 
 COPY . /build/
 
+WORKDIR /build
+
 RUN pwd && ls -la && \
-    mvn clean install -DskipTests -N && \
+    mvn install -DskipTests -N && \
     if [ -d "dubbo-common" ]; then \
-        mvn clean install -DskipTests -pl dubbo-common -am; \
+        mvn  install -DskipTests -pl dubbo-common -am; \
     fi && \
     if [ -d "dubbo-provider" ]; then \
         cd dubbo-provider && \
-        mvn clean package spring-boot:repackage -DskipTests && \
+        mvn clean  package spring-boot:repackage -DskipTests && \
         find target -name "*.jar" -type f | xargs ls -lh && \
         find target -name "original-*.jar" -type f -exec echo "  - {}" \; && \
         find target -name "dubbo-provider*.jar" ! -name "original*" -type f -exec echo "  - {}" \; && \

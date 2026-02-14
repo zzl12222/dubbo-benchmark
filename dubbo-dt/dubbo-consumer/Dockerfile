@@ -7,12 +7,13 @@ COPY . /build/
 
 ENV MAVEN_OPTS="-Dmaven.repo.remote=https://maven.aliyun.com/repository/public -Dmaven.repo.local=/root/.m2/repository"
 
-RUN mvn clean install -N -DskipTests && \
+WORKDIR /build
+RUN mvn install -N -DskipTests && \
     cd dubbo-common && \
-    mvn clean install -DskipTests && \
+    mvn  install -DskipTests && \
     cd .. && \
     cd dubbo-consumer && \
-    mvn clean package spring-boot:repackage -DskipTests && \
+    mvn  package spring-boot:repackage -DskipTests && \
     ls -lh target/*.jar && \
     jar tf target/*.jar | grep -E "(DubboInvokeStat|DubboTest)" | head -10
 

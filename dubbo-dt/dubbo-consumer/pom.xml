@@ -59,7 +59,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.dubbo.consumer.ConsumerApplication</mainClass>
+                    <mainClass>org.apache.dubbo.consumer.ConsumerApplication</mainClass>
                     <layers>
                         <enabled>true</enabled>
                     </layers>

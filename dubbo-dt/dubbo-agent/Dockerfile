@@ -3,7 +3,8 @@ FROM maven:3.8.4-jdk-8 AS builder
 WORKDIR /build
 COPY . /build/
 
-RUN mvn clean package -DskipTests
+WORKDIR /build
+RUN mvn install -DskipTests
 
 FROM eclipse-temurin:8-jdk
 ENV TZ=Asia/Shanghai

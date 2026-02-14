@@ -1,2 +1,2 @@
-provideDubboFilter=com.dubbo.common.filter.ProduceDubboFilter
-consumerDubboFilter=com.dubbo.common.filter.ConsumerDubboFilter
+provideDubboFilter=org.apache.dubbo.common.filter.ProduceDubboFilter
+consumerDubboFilter=org.apache.dubbo.common.filter.ConsumerDubboFilter

@@ -143,12 +143,11 @@ do
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
       - DUBBO_REGISTER_MODE=instance
-      - DUBBO_PROTOCOL_NAME=${AGENT_PROTOCOL:-dubbo}
-      - DUBBO_PROTOCOL_SERIALIZATION=${AGENT_SERIALIZE:-hessian2}
+      - dubbo.protocol.name=${AGENT_PROTOCOL:-dubbo}
+      - dubbo.protocol.serialization=${AGENT_SERIALIZE:-hessian2}
       - AGENT_PORT=${DUBBO_AGENT_PORT}
       - DUBBO_PROTOCOL_PORT=${PROVIDER_DUBBO_PORT}
       - DUBBO_REGISTER_MODE=instance
-      - DUBBO_PROTOCOL_NAME=dubbo
       - DUBBO_LOADBALANCE=leastactive
       - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
       - DUBBO_REGISTRY_RETRY_TIMES=20

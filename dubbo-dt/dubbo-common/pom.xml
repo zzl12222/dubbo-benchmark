@@ -17,8 +17,6 @@
         <dubbo.compiler.version>3.1.0</dubbo.compiler.version>
         <protoc.version>3.21.12</protoc.version>
         <grpc.version>1.53.0</grpc.version>
-        <proto.source.directory>${project.basedir}/src/main/java/com/dubbo//common/api/proto</proto.source.directory>
-        <proto.generated.directory>${project.build.directory}/generated-sources/protobuf/java</proto.generated.directory>
     </properties>
 
     <dependencies>
@@ -74,28 +72,19 @@
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.7.1</version>
+                <version>1.6.1</version>
             </extension>
         </extensions>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <protoSourceRoot>${proto.source.directory}</protoSourceRoot>
-                    <outputDirectory>${proto.generated.directory}</outputDirectory>
-                    <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
+                    <protocArtifact>com.google.protobuf:protoc:3.7.1:exe:${os.detected.classifier}</protocArtifact>
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    <!--                    <outputDirectory>build/generated/source/proto/main/java</outputDirectory>-->
                     <clearOutputDirectory>true</clearOutputDirectory>
                     <protocPlugins>
                         <protocPlugin>
@@ -105,6 +94,7 @@
                             <version>${dubbo.compiler.version}</version>
                             <mainClass>org.apache.dubbo.gen.dubbo.Dubbo3Generator</mainClass>
                         </protocPlugin>
+
                         <protocPlugin>
                             <id>dubbo-grpc</id>
                             <groupId>org.apache.dubbo</groupId>
@@ -128,7 +118,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -137,7 +126,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${proto.generated.directory}</source>
+                                <source>build/generated/source/proto/main/java</source>
                             </sources>
                         </configuration>
                     </execution>

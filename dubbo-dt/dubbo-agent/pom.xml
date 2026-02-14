@@ -58,7 +58,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.dubbo.dlt.AgentApplication</mainClass>
+                            <mainClass>org.apache.dubbo.agent.AgentApplication</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Implementation-Title>Dubbo Agent</Implementation-Title>
