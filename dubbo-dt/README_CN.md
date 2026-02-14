@@ -4,7 +4,7 @@ https://img.shields.io/badge/build-passing-brightgreen
 
 本项目专注于测试 Dubbo 框架的性能表现。通过 Docker 容器化技术，帮助开发者快速测试项目中负载均衡算法的实际使用情况。
 
-## 如何运行测试
+## 如何运行测试（当Agent命名空间是agentProto是proto测试)
 
 ### 方式一：docker部署
 
@@ -40,7 +40,7 @@ cd result
 | Agent测试时长      | 输入Agent测试持续时间(秒) | 100秒(如果需要测试自己的方法，就必须加这个)                  |
 | Agent测试请求数    | 输入Agent测试请求总数     | 100次                                                        |
 | Agent序列化方式    | 输入Agent序列化方式       | hessian2                                                     |
-| Agent命名空间      | agent的命名空间           | dubbo-agent                                                  |
+| Agent命名空间      | agent的命名空间           | **dubbo-agent(无proto测试)，agentProto(带proto测试)**        |
 | Dubbo Provider数量 | 输入Provider数量          | 10                                                           |
 
 #### 3.生成结果（可选）

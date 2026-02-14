@@ -4,7 +4,7 @@ https://img.shields.io/badge/build-passing-brightgreen
 
 This project focuses on testing the performance of the Dubbo framework. Through Docker containerization technology, it helps developers quickly test the actual usage of load balancing algorithms in their projects.
 
-## How to Run Tests
+## How to Run Tests（When the Agent namespace is agentProto, it is the proto test）
 
 ### Method 1: Docker Deployment
 
@@ -39,7 +39,7 @@ cd result
 | Agent Test Duration           | Enter Agent test duration (seconds) | 100 seconds                                                  |
 | Agent Test Request Count      | Enter Agent total test requests     | 100 times                                                    |
 | Agent Serialization Method    | Enter Agent serialization method    | hessian2                                                     |
-| Agent Namespace               | Agent namespace                     | dubbo-agent                                                  |
+| Agent Namespace               | Agent namespace                     | **dubbo-agent (testing without proto), agentProto (testing with proto)** |
 | Dubbo Provider Count          | Enter Provider count                | 10                                                           |
 | Agent Protocol                | Enter protocol name                 | dubbo                                                        |
 
