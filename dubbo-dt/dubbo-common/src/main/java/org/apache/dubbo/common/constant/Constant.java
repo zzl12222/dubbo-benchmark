@@ -4,7 +4,7 @@ public class Constant {
     public final static String SERIALIZATION = "serialization";
     public final static Integer DUBBO_TIME_OUT = 5000;
     public final static String SPRING_APPLICATION_NAME = "SPRING_APPLICATION_NAME";
-    public final static String SPRING_APPLICATION_NAME_DEFAULT = "dubbo-agent";
+    public final static String SPRING_APPLICATION_NAME_DEFAULT = "agentProto";
     public final static String SERVICE_PORT = "SERVICE_PORT";
     public final static String SERVICE_PORT_DEFAULT = "8082";
     public final static String AGENT_DURATION_SECONDS = "AGENT_DURATION_SECONDS";
@@ -14,7 +14,7 @@ public class Constant {
     public final static String AGENT_LOCADBANCE = "AGENT_LOCADBANCE";
     public final static String AGENT_LOCADBANCE_DEFAULT = "random";
     public final static String AGENT_SERIALIZATION = "AGENT_SERIALIZATION";
-    public final static String AGENT_SERIALIZATION_DEFAULT = "hessian2";
+    public final static String AGENT_SERIALIZATION_DEFAULT = "protobuf";
     public final static String AGENT_PROTOCOL = "AGENT_PROTOCOL";
     public final static String AGENT_PROTOCOL_DEFAULT = "dubbo";
     public final static String AGENT_TEST_MODE = "AGENT_TEST_MODE";

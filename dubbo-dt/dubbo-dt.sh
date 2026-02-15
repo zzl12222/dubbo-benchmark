@@ -23,7 +23,7 @@ echo "Consumer Count: $CONSUMER_NUM"
 echo ""
 echo "Configure Agent Test Parameters / 配置Agent测试参数"
 read -p "Agent Namespace / agent的命名空间 (默认/Default:dubbo-agent):" DUBBO_AGENT
-DUBBO_AGENT=${DUBBO_AGENT:-dubbo-agent}
+DUBBO_AGENT=${DUBBO_AGENT:-agentProto}
 
 read -p "Agent Prot / agent的端口 (默认/Default:8082):" DUBBO_AGENT_PORT
 DUBBO_AGENT_PORT=${DUBBO_AGENT_PORT:-8082}
@@ -41,8 +41,8 @@ AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
 read -p "Enter protocol name / 输入协议 (默认/Defaul:dubbo): " AGENT_PROTOCOL
 AGENT_PROTOCOL=${AGENT_PROTOCOL:-dubbo}
 
-read -p "Enter Agent serialization method / 输入Agent序列化方式 (默认/Defaul:hessian2): " AGENT_SERIALIZE
-AGENT_SERIALIZE=${AGENT_SERIALIZE:-hessian2}
+read -p "Enter Agent serialization method / 输入Agent序列化方式 (默认/Defaul:protobuf): " AGENT_SERIALIZE
+AGENT_SERIALIZE=${AGENT_SERIALIZE:-protobuf}
 
 PROVIDER_SERVICE_START_PORT=8000
 PROVIDER_DUBBO_START_PORT=20000
