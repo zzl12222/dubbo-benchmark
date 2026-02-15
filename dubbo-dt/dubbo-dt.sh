@@ -39,7 +39,7 @@ read -p "Enter Agent total test requests / 输入Agent测试请求总数 (默认
 AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
 
 read -p "Enter protocol name / 输入协议 (默认/Defaul:dubbo): " AGENT_PROTOCOL
-AGENT_PROTOCOL=${AGENT_PROTOCOL:-dubbo}
+AGENT_PROTOCOL=${AGENT_PROTOCOL:-tri}
 
 read -p "Enter Agent serialization method / 输入Agent序列化方式 (默认/Defaul:protobuf): " AGENT_SERIALIZE
 AGENT_SERIALIZE=${AGENT_SERIALIZE:-protobuf}

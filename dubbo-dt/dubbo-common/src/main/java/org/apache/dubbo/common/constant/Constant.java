@@ -16,7 +16,7 @@ public class Constant {
     public final static String AGENT_SERIALIZATION = "AGENT_SERIALIZATION";
     public final static String AGENT_SERIALIZATION_DEFAULT = "protobuf";
     public final static String AGENT_PROTOCOL = "AGENT_PROTOCOL";
-    public final static String AGENT_PROTOCOL_DEFAULT = "dubbo";
+    public final static String AGENT_PROTOCOL_DEFAULT = "tri";
     public final static String AGENT_TEST_MODE = "AGENT_TEST_MODE";
     public final static String AGENT_TEST_MODE_DEFAULT = "FIXED_COUNT";
     public final static String AGENT_HOST = "AGENT_HOST";
