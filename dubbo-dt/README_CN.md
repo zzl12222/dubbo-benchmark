@@ -142,7 +142,7 @@ public enum DubboInvokeEnum {
 
 ### 协议转换:
 
-> ***不同的协议使用不同的方法创建，只要抽象对象上面可以加到@DubboInvokeStat注解，启动类上面有@EnableDubboTest注解，就可以使用基测工具***
+> ***不同的协议使用不同的方法创建，只要抽象对象上面可以加到@DubboInvokeStat注解，启动类上面有@EnableDubboTest注解，就可以使用基测工具。<!--记住使用protobuf的时候先使用maven编译源文件，再启动-->***
 
 
 

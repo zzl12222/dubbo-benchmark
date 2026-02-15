@@ -152,7 +152,7 @@ Add annotation on Provider:
 
 ### Protocol Adaptation:
 
-> ***The framework supports multiple protocols with different initialization methods. Any abstract interface annotated with @DubboInvokeStat within packages scanned by @EnableDubboTest is automatically available for testing.***
+> ***The framework supports multiple protocols with different initialization methods. Any abstract interface annotated with @DubboInvokeStat within packages scanned by @EnableDubboTest is automatically available for testing.***<!-- Remember to compile the source files with Maven before starting -->
 
 ## Result:Dubbo Performance Test Result File Naming Convention
 
