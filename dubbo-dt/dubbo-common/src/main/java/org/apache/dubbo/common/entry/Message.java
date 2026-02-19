@@ -4,6 +4,7 @@ import org.apache.dubbo.common.conf.ClientType;
 import org.apache.dubbo.common.conf.MessageType;
 import lombok.Data;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 public class Message implements Serializable {
@@ -16,7 +17,15 @@ public class Message implements Serializable {
     private ClientType clientType;
     
     public Message() {
-        this.messageId = java.util.UUID.randomUUID().toString();
+        this.messageId = UUID.randomUUID().toString();
         this.timestamp = System.currentTimeMillis();
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getData() {
+        return data;
     }
 }

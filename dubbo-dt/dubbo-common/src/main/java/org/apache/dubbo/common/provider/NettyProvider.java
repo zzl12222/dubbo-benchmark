@@ -1,12 +1,12 @@
 package org.apache.dubbo.common.provider;
 
+import com.alibaba.fastjson2.JSON;
 import org.apache.dubbo.common.conf.ClientType;
 import org.apache.dubbo.common.conf.MessageType;
 import org.apache.dubbo.common.constant.Constant;
 import org.apache.dubbo.common.cpu.SystemMonitorUtil;
 import org.apache.dubbo.common.entry.Message;
 import org.apache.dubbo.common.netty.NettyClient;
-import com.alibaba.fastjson2.JSONObject;
 import org.apache.dubbo.common.netty.protocol.HeartbeatMessage;
 import org.apache.dubbo.common.netty.protocol.RegisterMessage;
 import org.apache.dubbo.common.netty.protocol.ShutdownMessage;
@@ -80,7 +80,7 @@ public class NettyProvider{
         RegisterMessage registerMsg = new RegisterMessage();
         registerMsg.setTimestamp(System.currentTimeMillis());
         Message message = new Message();
-        message.setData(JSONObject.toJSONString(registerMsg));
+        message.setData(JSON.toJSONString(registerMsg));
         message.setType(MessageType.REGISTER);
         message.setTimestamp(System.currentTimeMillis());
         message.setClientId(providerId);
@@ -98,7 +98,7 @@ public class NettyProvider{
                 double currentQps = 11.0;
                 heartbeat.setLoad((int) currentQps);
                 Message message = new Message();
-                message.setData(JSONObject.toJSONString(heartbeat));
+                message.setData(JSON.toJSONString(heartbeat));
                 message.setType(MessageType.HEARTBEAT);
                 message.setTimestamp(System.currentTimeMillis());
                 message.setClientId(providerId);

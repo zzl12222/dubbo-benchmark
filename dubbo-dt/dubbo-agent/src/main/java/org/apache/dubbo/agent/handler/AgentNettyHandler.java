@@ -1,5 +1,7 @@
 package org.apache.dubbo.agent.handler;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import org.apache.dubbo.common.entry.ConsumerTestResult;
 import org.apache.dubbo.agent.trendGenerator.ConsumerGeneratorHtml;
 import org.apache.dubbo.agent.trendGenerator.ProduceGeneratorHtml;
@@ -10,8 +12,6 @@ import org.apache.dubbo.common.entry.Message;
 import org.apache.dubbo.common.entry.TestConfig;
 import org.apache.dubbo.common.netty.NettyServer;
 import org.apache.dubbo.common.netty.protocol.RegisterMessage;
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.TypeReference;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

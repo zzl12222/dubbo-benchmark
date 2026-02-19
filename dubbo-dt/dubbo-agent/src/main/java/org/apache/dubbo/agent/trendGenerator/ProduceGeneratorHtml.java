@@ -1,5 +1,6 @@
 package org.apache.dubbo.agent.trendGenerator;
 
+
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.apache.dubbo.common.entry.CpuMemTrendData;

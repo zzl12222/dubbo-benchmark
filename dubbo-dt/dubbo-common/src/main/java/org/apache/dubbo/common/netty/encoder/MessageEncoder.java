@@ -1,7 +1,7 @@
 package org.apache.dubbo.common.netty.encoder;
 
-import org.apache.dubbo.common.entry.Message;
 import com.alibaba.fastjson2.JSON;
+import org.apache.dubbo.common.entry.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;

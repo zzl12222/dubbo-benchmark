@@ -1,12 +1,12 @@
 package org.apache.dubbo.common.consumer;
 
+import com.alibaba.fastjson2.JSON;
 import org.apache.dubbo.common.conf.ClientType;
 import org.apache.dubbo.common.conf.MessageType;
 import org.apache.dubbo.common.entry.ConsumerTestResult;
 import org.apache.dubbo.common.entry.Message;
 import org.apache.dubbo.common.entry.TestConfig;
 import org.apache.dubbo.common.scan.SimpleDubboScanner;
-import com.alibaba.fastjson2.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class ConsumerHandler extends SimpleChannelInboundHandler<Message> {
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         MessageType type = message.getType();
         if  (type ==  MessageType.CONTROL) {
-            TestConfig testConfig1 = JSONObject.parseObject(message.getData(), TestConfig.class);
+            TestConfig testConfig1 = JSON.parseObject(message.getData(), TestConfig.class);
             testConfig1.setConsumerId(testConfig.getConsumerId());
             simpleDubboScanner.run();
             List<Method> allMethodsByAnnotationValue = simpleDubboScanner.findAllMethodsByAnnotationValue(testConfig1.getNamespace());
@@ -41,7 +41,7 @@ public class ConsumerHandler extends SimpleChannelInboundHandler<Message> {
             response.setType(MessageType.RESULT);
             response.setClientId(testConfig.getConsumerId());
             response.setClientType(ClientType.CONSUMER);
-            response.setData(JSONObject.toJSONString(testResultList));
+            response.setData(JSON.toJSONString(testResultList));
             channelHandlerContext.writeAndFlush(response);
         }
 
