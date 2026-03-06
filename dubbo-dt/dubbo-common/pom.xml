@@ -21,6 +21,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo</artifactId>
 <!--            <exclusions>-->
@@ -32,17 +42,44 @@
 <!--                    <groupId>org.apache.dubbo</groupId>-->
 <!--                    <artifactId>dubbo-rpc-api</artifactId>-->
 <!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.apache.dubbo</groupId>-->
+<!--                    <artifactId>dubbo-spring-boot-observability-starter</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>io.micrometer</groupId>-->
+<!--                    <artifactId>micrometer-tracing</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>io.micrometer</groupId>-->
+<!--                    <artifactId>micrometer-tracing-bridge-brave</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>io.opentelemetry</groupId>-->
+<!--                    <artifactId>opentelemetry-api</artifactId>-->
+<!--                </exclusion>-->
 <!--            </exclusions>-->
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.apache.dubbo</groupId>-->
 <!--            <artifactId>dubbo-cluster</artifactId>-->
-<!--            <version>3.2.0</version>-->
+<!--            <version>3.3.7-SNAPSHOT</version>-->
 <!--        </dependency>-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>org.apache.dubbo</groupId>-->
 <!--            <artifactId>dubbo-rpc-api</artifactId>-->
-<!--            <version>3.2.0</version>-->
+<!--            <version>3.3.7-SNAPSHOT</version>-->
 <!--        </dependency>-->
         <dependency>
             <groupId>com.google.protobuf</groupId>
@@ -70,12 +107,13 @@
             <version>2.12.5</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
@@ -102,6 +140,7 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
+                    <pluginParameter>--no-java-generate-annotations</pluginParameter>
                     <protocArtifact>com.google.protobuf:protoc:3.7.1:exe:${os.detected.classifier}</protocArtifact>
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
@@ -147,7 +186,8 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>build/generated/source/proto/main/java</source>
+                                <source>${project.build.directory}/generated-sources/protobuf/grpc-java</source>
+                                <source>${project.build.directory}/generated-sources/protobuf/java</source>
                             </sources>
                         </configuration>
                     </execution>

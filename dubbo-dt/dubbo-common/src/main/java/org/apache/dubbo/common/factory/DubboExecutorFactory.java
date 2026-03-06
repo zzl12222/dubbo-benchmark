@@ -1,5 +1,6 @@
 package org.apache.dubbo.common.factory;
 
+
 import org.apache.dubbo.common.aop.DubboInvokeStat;
 import org.apache.dubbo.common.constant.Constant;
 import org.apache.dubbo.common.entry.TestConfig;
@@ -113,34 +114,70 @@ public class DubboExecutorFactory implements DubbTestExecutorFactory{
 
         throw new IllegalArgumentException("not Find enum");
     }
+    private boolean isProtobufServiceClass(Class<?> clazz) {
+        if (clazz.getName().contains("Grpc$") && clazz.getName().endsWith("Base")) {
+            return true;
+        }
 
+        Class<?> superclass = clazz.getSuperclass();
+        if (superclass != null &&
+                (superclass.getName().contains("Grpc") ||
+                        superclass.getName().contains("AbstractService"))) {
+            return true;
+        }
+
+        for (Class<?> iface : clazz.getInterfaces()) {
+            if (iface.getName().contains("Grpc") ||
+                    iface.getName().contains("AsyncService")) {
+                return true;
+            }
+        }
+
+        return clazz.getName().contains("Grpc") &&
+                clazz.getName().contains("$") &&
+                !clazz.getName().contains("Message");
+    }
     public Object executeMethod(TestConfig config, Method method, Object argValue) {
         ReferenceConfig<?> reference = null;
+        Method targetMethod;
+        Class<?> targetInterface;
         try {
             Class<?> serviceInterface = method.getDeclaringClass();
+            Class<?>[] interfaces = serviceInterface.getInterfaces();
             reference = new ReferenceConfig<>();
-            reference.setInterface(serviceInterface);
+            if (interfaces != null && interfaces.length > 0) {
+                targetInterface = interfaces[0];
+                targetMethod = targetInterface.getMethod(
+                        method.getName(),
+                        method.getParameterTypes()
+                );
+                reference.setInterface(targetInterface);
+            } else {
+                targetInterface = serviceInterface;
+                targetMethod = method;
+                reference.setInterface(serviceInterface);
+            }
             reference.setLoadbalance(config.getLocadbance());
             reference.setCheck(false);
             reference.setTimeout(Constant.DUBBO_TIME_OUT);
             reference.setProtocol(config.getProtocol());
             reference.setParameters(Collections.singletonMap(Constant.SERIALIZATION, config.getSerialization()));
             Object service = reference.get();
-            Object[] args = parseArgValue(argValue, method.getParameterTypes());
+            Object[] args = parseArgValue(argValue, method.getParameterTypes(), method.getReturnType());
             beforeInvokeFilter(method, args, serviceInterface);
-            Object result = method.invoke(service, args);
+            Object result = targetMethod.invoke(service, args);
             afterInvokeFilter(method, args, result, serviceInterface);
             return result;
         } catch (Exception e) {
             exceptionInvokeFilter(method, argValue, e);
             throw new RuntimeException("do Dubbo func fail : " + method.getName(), e);
         } finally {
-            reference = null;
+           reference = null;
         }
     }
 
 
-    private Object[] parseArgValue(Object argValue, Class<?>[] parameterTypes) throws Exception {
+    private Object[] parseArgValue(Object argValue, Class<?>[] parameterTypes, Class<?> returnType) throws Exception {
         if (argValue == null) {
             return new Object[0];
         }

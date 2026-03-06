@@ -147,11 +147,10 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
         if (parentDir != null && !parentDir.exists()) {
             parentDir.mkdirs();
         }
-        String jsonStr = JSONObject.toJSONString(testResult);
 
         Files.write(
                 file.toPath(),
-                jsonStr.getBytes(),
+                testResult.getBytes(),
                 java.nio.file.StandardOpenOption.CREATE,
                 java.nio.file.StandardOpenOption.APPEND
         );

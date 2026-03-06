@@ -196,13 +196,11 @@ public class SimpleDubboScanner implements CommandLineRunner {
                 MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
                 String className = metadataReader.getClassMetadata().getClassName();
                 classCount++;
-                if (metadataReader.getClassMetadata().isInterface()) {
-                    Class<?> clazz = Class.forName(className);
-                    int methodsInInterface = scanInterfaceMethods(clazz);
-                    if (methodsInInterface > 0) {
-                        interfaceCount++;
-                        methodCount += methodsInInterface;
-                    }
+                Class<?> clazz = Class.forName(className);
+                int methodsInInterface = scanInterfaceMethods(clazz);
+                if (methodsInInterface > 0) {
+                    interfaceCount++;
+                    methodCount += methodsInInterface;
                 }
             } catch (Exception e) {
                 log.warn("Scan Class fail: {} - {}", resource.getFilename(), e.getMessage());

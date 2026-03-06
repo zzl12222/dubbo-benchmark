@@ -20,10 +20,6 @@ public class ConsumerDubboFilter implements Filter {
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        boolean hasStatAnnotation = hasDubboInvokeStatAnnotation(invoker, invocation);
-        if (!hasStatAnnotation) {
-            return invoker.invoke(invocation);
-        }
         return executeWithTestStat(invoker, invocation);
     }
 

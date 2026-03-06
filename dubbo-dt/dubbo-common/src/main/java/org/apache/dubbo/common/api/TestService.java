@@ -11,5 +11,5 @@ public interface TestService {
     @DubboInvokeStat(namespace = "agentname", argKey = "AGENT_NAME_HELLO", argValue = DubboInvokeEnum.class)
     String sayHeelow(String name);
     @DubboInvokeStat(namespace = "agentProto", argKey = "AGENT_PROTO", argValue = DubboInvokeEnum.class)
-    UserProto.UserResponse sayHellos(UserProto.UserRequest request);
+    UserResponse sayHellos(UserRequest request);
 }

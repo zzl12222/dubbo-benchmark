@@ -124,7 +124,11 @@ public class ProduceGeneratorHtml {
     public static List<CallRecord> parseCallRecords(JSONObject root) {
         List<CallRecord> records = new ArrayList<>();
         JSONObject allResults = root.getJSONObject("allResults");
-        JSONObject providerObj = allResults.getJSONObject("TestService-provider");
+        JSONObject providerObj = null;
+        for (String s : allResults.keySet()) {
+            providerObj = allResults.getJSONObject(s);
+        }
+
         List<JSONObject> list = providerObj.getJSONArray("provideResultList").toJavaList(JSONObject.class);
 
         for (JSONObject item : list) {

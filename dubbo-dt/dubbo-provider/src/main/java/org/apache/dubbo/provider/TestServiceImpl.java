@@ -2,7 +2,9 @@ package org.apache.dubbo.provider;
 
 import org.apache.dubbo.common.api.TestService;
 
-import org.apache.dubbo.common.api.UserProto;
+
+import org.apache.dubbo.common.api.UserRequest;
+import org.apache.dubbo.common.api.UserResponse;
 import org.apache.dubbo.config.annotation.DubboService;
 
 
@@ -37,7 +39,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public UserProto.UserResponse sayHellos(UserProto.UserRequest request) {
-        return UserProto.UserResponse.newBuilder().setGreeting("你好").build();
+    public UserResponse sayHellos(UserRequest request) {
+        return UserResponse.newBuilder().setGreeting("你好").build();
     }
 }

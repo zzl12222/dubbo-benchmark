@@ -18,15 +18,9 @@ public class ProduceDubboFilter implements Filter {
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        Class<?> serviceInterface = invoker.getInterface();
         String methodName = invocation.getMethodName();
         String interfaceName = invoker.getInterface().getSimpleName();
         String providerName = interfaceName + "-provider";
-        DubboInvokeStat annotation = findAnnotation(serviceInterface, methodName,
-                                                    invocation.getParameterTypes());
-        if (annotation == null) {
-            return invoker.invoke(invocation);
-        }
         String error = null;
         ProduceResult produceResult = new ProduceResult();
         produceResult.setServiceName(providerName);
